@@ -6,6 +6,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
@@ -13,14 +15,19 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 public class SecurityConfig {
 
     @Bean
+    public PasswordEncoder getPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     public UserDetailsService userDetailsService() {
         UserDetails user1 = User.withUsername("Arun")
-                .password("{noop}Password@123")
+                .password(new BCryptPasswordEncoder().encode("Password@1234"))
                 .roles("ADMIN")
                 .build();
 
         UserDetails user2 = User.withUsername("Varun")
-                .password("{noop}Password@345")
+                .password(new BCryptPasswordEncoder().encode("Password@345"))
                 .roles("USER")
                 .build();     
 
