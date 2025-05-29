@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -39,16 +40,16 @@ public class SecurityConfig {
     // }
 
     // below one is for authentication
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // Just skipping the register end point alone from authentication
-        http.authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/auth/register").permitAll()
-                    .anyRequest().authenticated()
-                )      
-                .formLogin(Customizer.withDefaults());
-        return http.build(); 
-    }
+    // @Bean
+    // public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    //     // Just skipping the register end point alone from authentication
+    //     http.authorizeHttpRequests(auth -> auth
+    //                 .requestMatchers("/auth/register").permitAll()
+    //                 .anyRequest().authenticated()
+    //             )      
+    //             .formLogin(Customizer.withDefaults());
+    //     return http.build(); 
+    // }
 
     // below one is for both authentication as well as authorization
     //  @Bean
@@ -76,5 +77,18 @@ public class SecurityConfig {
     //             .formLogin(Customizer.withDefaults());
     //     return http.build(); 
     //}
+
+     // below one is for basic-authentication
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(auth -> auth
+                    .requestMatchers("/api/users").hasAnyRole("USER")
+                    .anyRequest().authenticated())
+                .sessionManagement(session -> session
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(csrf -> csrf.disable())
+                .httpBasic(Customizer.withDefaults());
+        return http.build(); 
+    }
 
 }
