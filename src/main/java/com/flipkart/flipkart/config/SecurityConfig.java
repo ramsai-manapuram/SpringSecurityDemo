@@ -38,6 +38,7 @@ public class SecurityConfig {
     //     return new InMemoryUserDetailsManager(user1, user2);
     // }
 
+    // below one is for authentication
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // Just skipping the register end point alone from authentication
@@ -45,9 +46,35 @@ public class SecurityConfig {
                     .requestMatchers("/auth/register").permitAll()
                     .anyRequest().authenticated()
                 )      
-                .csrf(csrf -> csrf.disable())
-                .httpBasic(Customizer.withDefaults());
+                .formLogin(Customizer.withDefaults());
         return http.build(); 
     }
+
+    // below one is for both authentication as well as authorization
+    //  @Bean
+    // public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    //     // Just skipping the register end point alone from authentication
+    //     http.authorizeHttpRequests(auth -> auth
+    //                 .requestMatchers("/users").hasAnyRole("USER", "ADMIN")
+    //                 .anyRequest().authenticated()
+    //             )      
+    //             .formLogin(Customizer.withDefaults());
+    //     return http.build(); 
+    // }
+
+    // Below is to manage single session (if user logs in multiple browsers)
+    //  @Bean
+    // public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    //     // Just skipping the register end point alone from authentication
+    //     http.authorizeHttpRequests(auth -> auth
+    //                 .requestMatchers("/users").hasAnyRole("USER", "ADMIN")
+    //                 .anyRequest().authenticated()
+    //             )      
+    //             .sessionManagement(session -> session
+    //                     .maximumSessions(1)
+    //                 .maxSessionsPreventsLogin(true))
+    //             .formLogin(Customizer.withDefaults());
+    //     return http.build(); 
+    //}
 
 }
