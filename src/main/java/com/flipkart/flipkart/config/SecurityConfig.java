@@ -79,15 +79,25 @@ public class SecurityConfig {
     //}
 
      // below one is for basic-authentication
+    // @Bean
+    // public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    //     http.authorizeHttpRequests(auth -> auth
+    //                 .requestMatchers("/api/users").hasAnyRole("USER")
+    //                 .anyRequest().authenticated())
+    //             .sessionManagement(session -> session
+    //                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+    //             .csrf(csrf -> csrf.disable())
+    //             .httpBasic(Customizer.withDefaults());
+    //     return http.build(); 
+    // }
+
+    // Confirming springboot that we are going with OAuth2 login
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/api/users").hasAnyRole("USER")
                     .anyRequest().authenticated())
-                .sessionManagement(session -> session
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(csrf -> csrf.disable())
-                .httpBasic(Customizer.withDefaults());
+                .oauth2Login(Customizer.withDefaults());
         return http.build(); 
     }
 
